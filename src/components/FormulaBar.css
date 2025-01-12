@@ -1,0 +1,22 @@
+.formula-bar {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    background-color: #f1f3f4;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .formula-label {
+    font-weight: bold;
+    margin-right: 8px;
+  }
+  
+  .formula-input {
+    flex: 1;
+    height: 24px;
+    border: 1px solid #e0e0e0;
+    padding: 0 4px;
+    font-size: 14px;
+  }
+  
+  
