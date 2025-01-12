@@ -1,4 +1,4 @@
-.spreadsheet {
+/* .spreadsheet {
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -28,5 +28,110 @@
   .corner-cell {
     min-width: 40px;
   }
+  
+   */
+
+
+   .spreadsheet {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #ffffff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
+  .grid {
+    flex: 1;
+    overflow: auto;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+  
+  .header-row, .row {
+    display: flex;
+    height: 28px;
+  }
+  
+  .corner-cell, .header-cell {
+    min-width: 80px;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    user-select: none;
+    position: relative;
+    color: #64748b;
+    font-size: 12px;
+  }
+  
+  .corner-cell {
+    min-width: 40px;
+    background-color: #f1f5f9;
+  }
+  
+  .resize-handle {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 4px;
+    height: 4px;
+    background-color: #94a3b8;
+    cursor: se-resize;
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  
+  .header-cell:hover .resize-handle {
+    opacity: 1;
+  }
+  
+  .header-cell .resize-handle {
+    cursor: col-resize;
+    height: 100%;
+    top: 0;
+    width: 3px;
+  }
+  
+  .header-cell:first-child .resize-handle {
+    cursor: row-resize;
+    width: 100%;
+    left: 0;
+    height: 3px;
+  }
+  
+  .cell {
+    border: 1px solid #e2e8f0;
+    padding: 0 6px;
+    font-size: 13px;
+    transition: background-color 0.1s;
+  }
+  
+  .cell:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    z-index: 2;
+  }
+  
+  .cell-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+    background: transparent;
+  }
+  
+  .cell-input:focus {
+    outline: none;
+  }
+  
+  .error {
+    color: #ef4444;
+    font-weight: 500;
+  }
+  
   
   

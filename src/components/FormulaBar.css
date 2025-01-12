@@ -1,4 +1,4 @@
-.formula-bar {
+/* .formula-bar {
     display: flex;
     align-items: center;
     padding: 4px 8px;
@@ -17,6 +17,46 @@
     border: 1px solid #e0e0e0;
     padding: 0 4px;
     font-size: 14px;
+  }
+  
+   */
+
+
+
+
+   .formula-bar {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    gap: 8px;
+  }
+  
+  .formula-label {
+    font-weight: 500;
+    color: #64748b;
+    font-size: 13px;
+    background-color: #f8fafc;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .formula-input {
+    flex: 1;
+    height: 28px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 0 8px;
+    font-size: 13px;
+    transition: border-color 0.2s;
+  }
+  
+  .formula-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
   }
   
   
