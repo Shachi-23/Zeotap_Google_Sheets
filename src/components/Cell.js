@@ -1,140 +1,8 @@
-// import React, { useState, useCallback, useEffect } from 'react';
-// import './Cell.css';
-
-// function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isSelected, isDragging }) {
-//   const [editing, setEditing] = useState(false);
-//   const [inputValue, setInputValue] = useState(formula);
-
-//   useEffect(() => {
-//     setInputValue(formula);
-//   }, [formula]);
-
-//   const handleDoubleClick = useCallback(() => {
-//     setEditing(true);
-//   }, []);
-
-//   const handleChange = useCallback((e) => {
-//     setInputValue(e.target.value);
-//   }, []);
-
-//   const handleBlur = useCallback(() => {
-//     setEditing(false);
-//     onChange(inputValue, inputValue);
-//   }, [onChange, inputValue]);
-
-//   const handleKeyDown = useCallback((e) => {
-//     if (e.key === 'Enter') {
-//       setEditing(false);
-//       onChange(inputValue, inputValue);
-//     }
-//   }, [onChange, inputValue]);
-
-//   const cellStyle = {
-//     ...format,
-//     backgroundColor: isDragging ? '#e6f3ff' : isSelected ? '#d3e3fd' : 'white',
-//   };
-
-//   if (editing) {
-//     return (
-//       <input
-//         className="cell-input"
-//         value={inputValue}
-//         onChange={handleChange}
-//         onBlur={handleBlur}
-//         onKeyDown={handleKeyDown}
-//         style={cellStyle}
-//         autoFocus
-//       />
-//     );
-//   }
-
-//   return (
-//     <div 
-//       className="cell" 
-//       onDoubleClick={handleDoubleClick}
-//       onMouseDown={onMouseDown}
-//       onMouseEnter={onMouseEnter}
-//       style={cellStyle}
-//     >
-//       {value === '#ERROR!' ? <span className="error">{value}</span> : value}
-//     </div>
-//   );
-// }
-
-// export default Cell;
-
-
-
-// import React, { useState, useCallback, useEffect } from 'react';
-// import './Cell.css';
-
-// function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isSelected, isDragging }) {
-//   const [editing, setEditing] = useState(false);
-//   const [inputValue, setInputValue] = useState(formula);
-
-//   useEffect(() => {
-//     setInputValue(formula);
-//   }, [formula]);
-
-//   const handleDoubleClick = useCallback(() => {
-//     setEditing(true);
-//   }, []);
-
-//   const handleChange = useCallback((e) => {
-//     setInputValue(e.target.value);
-//   }, []);
-
-//   const handleBlur = useCallback(() => {
-//     setEditing(false);
-//     onChange(inputValue, inputValue);
-//   }, [onChange, inputValue]);
-
-//   const handleKeyDown = useCallback((e) => {
-//     if (e.key === 'Enter') {
-//       setEditing(false);
-//       onChange(inputValue, inputValue);
-//     }
-//   }, [onChange, inputValue]);
-
-//   const cellStyle = {
-//     ...format,
-//     backgroundColor: isDragging ? '#e6f3ff' : isSelected ? '#d3e3fd' : 'white',
-//   };
-
-//   return (
-//     <div 
-//       className="cell" 
-//       onDoubleClick={handleDoubleClick}
-//       onMouseDown={onMouseDown}
-//       onMouseEnter={onMouseEnter}
-//       style={cellStyle}
-//     >
-//       {editing ? (
-//         <input
-//           className="cell-input"
-//           value={inputValue}
-//           onChange={handleChange}
-//           onBlur={handleBlur}
-//           onKeyDown={handleKeyDown}
-//           style={cellStyle}
-//           autoFocus
-//         />
-//       ) : (
-//         value === '#ERROR!' ? <span className="error">{value}</span> : value
-//       )}
-//     </div>
-//   );
-// }
-
-// export default Cell;
-
-
-
-
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { validateCellData } from '../utils/dataValidation';
 import './Cell.css';
 
-function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isSelected, isDragging, style }) {
+function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isSelected, isDragging, style, merged, validationRules }) {
   const [editing, setEditing] = useState(false);
   const [inputValue, setInputValue] = useState(formula);
   const inputRef = useRef(null);
@@ -148,8 +16,14 @@ function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isS
   }, []);
 
   const handleChange = useCallback((e) => {
-    setInputValue(e.target.value);
-  }, []);
+    const newValue = e.target.value;
+    setInputValue(newValue);
+    const validation = validateCellData(newValue, validationRules);
+    if (!validation.isValid) {
+      // Display validation error (you can add a tooltip or change the cell style)
+      console.log(validation.message);
+    }
+  }, [validationRules]);
 
   const handleBlur = useCallback(() => {
     setEditing(false);
@@ -175,13 +49,21 @@ function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isS
     backgroundColor: isDragging ? '#e6f3ff' : isSelected ? '#d3e3fd' : 'white',
   };
 
+  if (merged && merged.hidden) {
+    return null;
+  }
+
   return (
     <div 
       className="cell" 
       onDoubleClick={handleDoubleClick}
       onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
-      style={cellStyle}
+      style={{
+        ...cellStyle,
+        gridRowEnd: merged && merged.rowSpan ? `span ${merged.rowSpan}` : undefined,
+        gridColumnEnd: merged && merged.colSpan ? `span ${merged.colSpan}` : undefined,
+      }}
     >
       {editing ? (
         <input
@@ -203,4 +85,3 @@ function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isS
 }
 
 export default React.memo(Cell);
-

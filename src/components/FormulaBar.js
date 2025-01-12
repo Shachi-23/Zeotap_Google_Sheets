@@ -16,4 +16,3 @@ function FormulaBar({ value, onChange }) {
 }
 
 export default FormulaBar;
-

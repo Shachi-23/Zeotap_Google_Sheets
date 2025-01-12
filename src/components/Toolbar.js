@@ -1,85 +1,5 @@
-// import React from 'react';
-// import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Type, Palette, PlusSquare, MinusSquare } from 'lucide-react';
-// import './Toolbar.css';
-
-// function Toolbar({ onFormatChange, onAddRow, onDeleteRow, onAddColumn, onDeleteColumn }) {
-//   return (
-//     <div className="toolbar">
-//       <div className="toolbar-group">
-//         <button className="toolbar-button" onClick={() => onFormatChange({ fontWeight: 'bold' })} title="Bold">
-//           <Bold size={18} />
-//         </button>
-//         <button className="toolbar-button" onClick={() => onFormatChange({ fontStyle: 'italic' })} title="Italic">
-//           <Italic size={18} />
-//         </button>
-//         <button className="toolbar-button" onClick={() => onFormatChange({ textDecoration: 'underline' })} title="Underline">
-//           <Underline size={18} />
-//         </button>
-//       </div>
-//       <div className="toolbar-group">
-//         <button className="toolbar-button" onClick={() => onFormatChange({ textAlign: 'left' })} title="Align Left">
-//           <AlignLeft size={18} />
-//         </button>
-//         <button className="toolbar-button" onClick={() => onFormatChange({ textAlign: 'center' })} title="Align Center">
-//           <AlignCenter size={18} />
-//         </button>
-//         <button className="toolbar-button" onClick={() => onFormatChange({ textAlign: 'right' })} title="Align Right">
-//           <AlignRight size={18} />
-//         </button>
-//       </div>
-//       <div className="toolbar-group">
-//         <div className="toolbar-select-wrapper">
-//           <Type size={18} />
-//           <select 
-//             className="toolbar-select" 
-//             onChange={(e) => onFormatChange({ fontSize: `${e.target.value}px` })}
-//             defaultValue="14"
-//           >
-//             {[8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72].map(size => (
-//               <option key={size} value={size}>{size}</option>
-//             ))}
-//           </select>
-//         </div>
-//       </div>
-//       <div className="toolbar-group">
-//         <div className="toolbar-color-wrapper">
-//           <Palette size={18} />
-//           <input 
-//             type="color" 
-//             className="toolbar-color"
-//             onChange={(e) => onFormatChange({ color: e.target.value })} 
-//             defaultValue="#000000"
-//           />
-//         </div>
-//       </div>
-//       <div className="toolbar-group">
-//         <button className="toolbar-button" onClick={onAddRow} title="Add Row">
-//           <PlusSquare size={18} />
-//         </button>
-//         <button className="toolbar-button" onClick={onDeleteRow} title="Delete Row">
-//           <MinusSquare size={18} />
-//         </button>
-//       </div>
-//       <div className="toolbar-group">
-//         <button className="toolbar-button" onClick={onAddColumn} title="Add Column">
-//           <PlusSquare size={18} />
-//         </button>
-//         <button className="toolbar-button" onClick={onDeleteColumn} title="Delete Column">
-//           <MinusSquare size={18} />
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Toolbar;
-
-
-
-
-
 import React from 'react';
-import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Type, Palette, PlusSquare, MinusSquare, Plus, Minus } from 'lucide-react';
+import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight, Type, Palette, Grid, Merge, BarChart, LineChart, PieChart } from 'lucide-react';
 import './Toolbar.css';
 
 function Toolbar({ 
@@ -89,7 +9,9 @@ function Toolbar({
   onAddColumn, 
   onDeleteColumn,
   canDeleteRow,
-  canDeleteColumn 
+  canDeleteColumn,
+  onMergeCells,
+  onCreateChart
 }) {
   return (
     <div className="toolbar">
@@ -115,15 +37,50 @@ function Toolbar({
           <AlignRight size={18} />
         </button>
       </div>
-      <div className="divider"></div>
+      <div className="toolbar-group">
+        <select 
+          className="toolbar-select" 
+          onChange={(e) => onFormatChange({ fontFamily: e.target.value })}
+        >
+          <option value="Arial">Arial</option>
+          <option value="Helvetica">Helvetica</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Courier">Courier</option>
+        </select>
+        <select 
+          className="toolbar-select" 
+          onChange={(e) => onFormatChange({ fontSize: e.target.value + 'px' })}
+        >
+          {[8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72].map(size => (
+            <option key={size} value={size}>{size}</option>
+          ))}
+        </select>
+        <input 
+          type="color" 
+          className="toolbar-color" 
+          onChange={(e) => onFormatChange({ color: e.target.value })} 
+        />
+        <input 
+          type="color" 
+          className="toolbar-color" 
+          onChange={(e) => onFormatChange({ backgroundColor: e.target.value })} 
+        />
+      </div>
+      <div className="toolbar-group">
+        <button className="toolbar-button" onClick={() => onFormatChange({ border: '1px solid black' })} title="Add Border">
+          <Grid size={18} />
+        </button>
+        <button className="toolbar-button" onClick={onMergeCells} title="Merge Cells">
+          <Merge size={18} />
+        </button>
+      </div>
       <div className="toolbar-group">
         <button 
           className="toolbar-button" 
           onClick={onAddRow} 
           title="Add Row"
         >
-          <Plus size={18} />
-          <span>Row</span>
+          Add Row
         </button>
         <button 
           className={`toolbar-button ${!canDeleteRow ? 'disabled' : ''}`}
@@ -131,8 +88,7 @@ function Toolbar({
           disabled={!canDeleteRow}
           title="Delete Row"
         >
-          <Minus size={18} />
-          <span>Row</span>
+          Delete Row
         </button>
       </div>
       <div className="toolbar-group">
@@ -141,8 +97,7 @@ function Toolbar({
           onClick={onAddColumn} 
           title="Add Column"
         >
-          <Plus size={18} />
-          <span>Column</span>
+          Add Column
         </button>
         <button 
           className={`toolbar-button ${!canDeleteColumn ? 'disabled' : ''}`}
@@ -150,8 +105,18 @@ function Toolbar({
           disabled={!canDeleteColumn}
           title="Delete Column"
         >
-          <Minus size={18} />
-          <span>Column</span>
+          Delete Column
+        </button>
+      </div>
+      <div className="toolbar-group">
+        <button className="toolbar-button" onClick={() => onCreateChart('bar')} title="Bar Chart">
+          <BarChart size={18} />
+        </button>
+        <button className="toolbar-button" onClick={() => onCreateChart('line')} title="Line Chart">
+          <LineChart size={18} />
+        </button>
+        <button className="toolbar-button" onClick={() => onCreateChart('pie')} title="Pie Chart">
+          <PieChart size={18} />
         </button>
       </div>
     </div>
@@ -159,4 +124,3 @@ function Toolbar({
 }
 
 export default Toolbar;
-
