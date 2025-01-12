@@ -23,6 +23,7 @@ function Spreadsheet({ data, onChange }) {
   const [rowHeights, setRowHeights] = useState({});
   const [conditionalFormattingRules, setConditionalFormattingRules] = useState([]);
   const [chart, setChart] = useState(null);
+  const [showChart, setShowChart] = useState(false);
 
   useEffect(() => {
     setCells(data);
@@ -58,9 +59,9 @@ function Spreadsheet({ data, onChange }) {
         const { start, end } = selectedRange;
         for (let row = start[0]; row <= end[0]; row++) {
           for (let col = start[1]; col <= end[1]; col++) {
-            newCells[row][col] = { 
-              ...newCells[row][col], 
-              format: { ...newCells[row][col].format, ...format } 
+            newCells[row][col] = {
+              ...newCells[row][col],
+              format: { ...newCells[row][col].format, ...format }
             };
           }
         }
@@ -94,17 +95,17 @@ function Spreadsheet({ data, onChange }) {
   const handleAddRow = useCallback(() => {
     setCells(prevCells => insertRow(prevCells, createCell));
   }, []);
-  
+
   const handleDeleteRow = useCallback(() => {
     setCells(prevCells => deleteRow(prevCells, selectedCell, MIN_ROWS));
     setSelectedCell(null);
     setSelectedRange(null);
   }, [selectedCell]);
-  
+
   const handleAddColumn = useCallback(() => {
     setCells(prevCells => insertColumn(prevCells, createCell));
   }, []);
-  
+
   const handleDeleteColumn = useCallback(() => {
     setCells(prevCells => deleteColumn(prevCells, selectedCell, MIN_COLS));
     setSelectedCell(null);
@@ -144,8 +145,13 @@ function Spreadsheet({ data, onChange }) {
     if (selectedRange) {
       const chartData = createChartData(cells, selectedRange);
       setChart({ type, data: chartData });
+      setShowChart(true);
     }
   }, [cells, selectedRange]);
+
+  const handleCloseChart = useCallback(() => {
+    setShowChart(false);
+  }, []);
 
   const isInSelectedRange = useCallback((row, col) => {
     if (!selectedRange) return false;
@@ -162,8 +168,8 @@ function Spreadsheet({ data, onChange }) {
       row.map((cell, colIndex) => {
         const evaluatedCell = {
           ...cell,
-          value: cell.formula.startsWith('=')
-            ? evaluateFormula(cell.formula, getCellValue)
+          value: cell.formula.startsWith('=') 
+            ? evaluateFormula(cell.formula, getCellValue) 
             : cell.value
         };
         const format = applyConditionalFormatting(evaluatedCell, conditionalFormattingRules);
@@ -174,7 +180,7 @@ function Spreadsheet({ data, onChange }) {
 
   return (
     <div className="spreadsheet" onMouseUp={handleMouseUp}>
-      <Toolbar 
+      <Toolbar
         onFormatChange={handleFormatChange}
         onAddRow={handleAddRow}
         onDeleteRow={handleDeleteRow}
@@ -185,7 +191,7 @@ function Spreadsheet({ data, onChange }) {
         onMergeCells={handleMergeCells}
         onCreateChart={handleCreateChart}
       />
-      <FormulaBar 
+      <FormulaBar
         value={selectedCell ? cells[selectedCell[0]][selectedCell[1]].formula : ''}
         onChange={(value) => {
           if (selectedCell) {
@@ -193,47 +199,54 @@ function Spreadsheet({ data, onChange }) {
           }
         }}
       />
-      <div className="grid">
-        <div className="header-row">
-          <div className="corner-cell"></div>
-          {Array(cells[0].length).fill().map((_, index) => (
-            <div 
-              key={index} 
-              className="header-cell"
-              style={{ width: columnWidths[index] || 80 }}
-            >
-              {columnIndexToLetter(index)}
+      {showChart ? (
+        <div className="chartcontainer">
+          <button className="close-chart-button" onClick={handleCloseChart}>
+            Back to Sheet
+          </button>
+          {chart && (
+            <Chart type={chart.type} data={chart.data} options={{}} />
+          )}
+        </div>
+      ) : (
+        <div className="grid">
+          <div className="header-row">
+            <div className="corner-cell"></div>
+            {Array(cells[0].length).fill().map((_, index) => (
+              <div
+                key={index}
+                className="header-cell"
+                style={{ width: columnWidths[index] || 100}}
+              >
+                {columnIndexToLetter(index)}
+              </div>
+            ))}
+          </div>
+          {renderedCells.map((row, rowIndex) => (
+            <div key={rowIndex} className="row">
+              <div className="header-cell">
+                {rowIndex + 1}
+              </div>
+              {row.map((cell, colIndex) => (
+                <Cell
+                  key={`${rowIndex}-${colIndex}`}
+                  value={cell.value}
+                  formula={cell.formula}
+                  format={cell.format}
+                  onChange={(value, formula) => handleCellChange(rowIndex, colIndex, value, formula)}
+                  onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                  onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
+                  isSelected={isInSelectedRange(rowIndex, colIndex)}
+                  onClick={() => setSelectedCell([rowIndex, colIndex])}
+                  style={{
+                    width: columnWidths[colIndex] || 100,
+                    height: rowHeights[rowIndex] || 30,
+                  }}
+                />
+              ))}
             </div>
           ))}
         </div>
-        {renderedCells.map((row, rowIndex) => (
-          <div key={rowIndex} className="row">
-            <div className="header-cell">
-              {rowIndex + 1}
-            </div>
-            {row.map((cell, colIndex) => (
-              <Cell
-                key={`${rowIndex}-${colIndex}`}
-                value={cell.value}
-                formula={cell.formula}
-                format={cell.format}
-                onChange={(value, formula) => handleCellChange(rowIndex, colIndex, value, formula)}
-                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-                onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
-                isSelected={selectedCell && selectedCell[0] === rowIndex && selectedCell[1] === colIndex}
-                isDragging={isInSelectedRange(rowIndex, colIndex)}
-                style={{
-                  width: columnWidths[colIndex] || 80,
-                  height: rowHeights[rowIndex] || 28,
-                }}
-                merged={cell.merged}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
-      {chart && (
-        <Chart type={chart.type} data={chart.data} options={{}} />
       )}
     </div>
   );

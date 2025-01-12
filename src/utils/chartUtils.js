@@ -1,4 +1,3 @@
-// Create chart data from a range of cells
 export function createChartData(cells, range) {
     const { start, end } = range;
     const labels = [];

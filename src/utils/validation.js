@@ -1,5 +1,3 @@
-// utils/validation.js
-
 // Check if a value is numeric
 export function isNumeric(value) {
     return !isNaN(value) && value !== '';

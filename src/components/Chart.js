@@ -11,11 +11,18 @@ function Chart({ type, data, options }) {
     pie: Pie
   }[type];
 
+  const chartOptions = {
+    ...options,
+    responsive: true,
+    maintainAspectRatio: false,
+  };
+
   return (
-    <div className="chart-container">
-      <ChartComponent data={data} options={options} />
+    <div className="chart-js">
+      <ChartComponent data={data} options={chartOptions} />
     </div>
   );
 }
 
 export default Chart;
+

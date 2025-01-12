@@ -11,7 +11,7 @@ function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isS
     setInputValue(formula);
   }, [formula]);
 
-  const handleDoubleClick = useCallback(() => {
+  const handleClick = useCallback(() => {
     setEditing(true);
   }, []);
 
@@ -56,7 +56,7 @@ function Cell({ value, formula, format, onChange, onMouseDown, onMouseEnter, isS
   return (
     <div 
       className="cell" 
-      onDoubleClick={handleDoubleClick}
+      onClick={handleClick}
       onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
       style={{

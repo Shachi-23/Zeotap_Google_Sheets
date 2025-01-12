@@ -16,6 +16,7 @@
   .header-row, .row {
     display: flex;
     height: 28px;
+    min-width: 100px;
   }
   
   .corner-cell, .header-cell {
@@ -59,6 +60,7 @@
     height: 100%;
     top: 0;
     width: 3px;
+    min-width: 100px;
   }
   
   .header-cell:first-child .resize-handle {
@@ -66,6 +68,7 @@
     width: 100%;
     left: 0;
     height: 3px;
+    min-width: 100px;
   }
   
   .cell {
@@ -73,6 +76,8 @@
     padding: 0 6px;
     font-size: 13px;
     transition: background-color 0.1s;
+    min-width: 100px; /* Match this with DEFAULT_COLUMN_WIDTH */
+    height: 25px;
   }
   
   .cell:focus-within {
@@ -100,5 +105,35 @@
     font-weight: 500;
   }
   
+  .chart-container {
+    position: relative;
+    width: 50%;
+    height: calc(100vh - 50px); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8fafc;
+  }
   
+  .close-chart-button {
+    position: absolute;
+    top: 65px;
+    left: 250px;
+    padding: 8px 16px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 10;
+  }
   
+  .close-chart-button:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .chart-container .chart-js {
+    max-width: 80%;
+    max-height: 80%;
+  }
