@@ -1,3 +1,26 @@
+export const createCell = () => ({
+    value: '',
+    formula: '',
+    format: {},
+    merged: undefined,
+  });
+  
+
+  export function columnIndexToLetter(index) {
+    let letter = '';
+    while (index >= 0) {
+      letter = String.fromCharCode((index % 26) + 65) + letter;
+      index = Math.floor(index / 26) - 1;
+    }
+    return letter;
+  }
+  
+  // Function to generate a unique ID (example: using current timestamp and a random number)
+  export function generateId() {
+    return 'ID-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+  }
+  
+
 export const insertRow = (cells, createCell) => {
     const newRow = Array(cells[0].length).fill().map(() => createCell());
     return [...cells, newRow];
