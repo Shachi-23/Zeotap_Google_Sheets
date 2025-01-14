@@ -26,7 +26,7 @@ A powerful and feature-rich spreadsheet application built with React.
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/react-spreadsheet.git
+   git clone https://github.com/Shachi-23/Zeotap_Google_Sheets.git
    ```
 
 2. Navigate to the project directory:
@@ -67,10 +67,6 @@ A powerful and feature-rich spreadsheet application built with React.
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
